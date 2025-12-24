@@ -2,7 +2,7 @@
 -- 使用示例
 
 -- 加载UI库
-local ModernUILibrary = loadstring(game:HttpGet('https://raw.githubusercontent.com/your-repo/ModernUILibrary.lua'))()()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/13222222fcc/cae/refs/heads/main/UI.lua"))()
 
 -- 创建UI实例
 local library = ModernUILibrary:new("高级脚本菜单")
