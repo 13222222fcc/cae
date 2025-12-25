@@ -1,4 +1,5 @@
-local library = loadstring(game:HttpGet("https://pastebin.com/raw/3vQbADjh", true))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/13222222fcc/cae/refs/heads/main/UI.lua"))();
+
 
 if not success then
 print("w脚本")  
