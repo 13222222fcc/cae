@@ -1,253 +1,209 @@
---==================================================
--- Wan s | Rayfield 完整脚本
---==================================================
-
---========== 服务 ==========
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local Workspace = game:GetService("Workspace")
-local LocalPlayer = Players.LocalPlayer
-
---========== 加载 Rayfield ==========
+-- Rayfield UI
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 
---========== 基本信息 ==========
-local PlayerName = LocalPlayer.Name
-local ServerId = game.JobId
-local Executor = identifyexecutor and identifyexecutor() or "未知注入器"
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlaceId = game.PlaceId
+local JobId = game.JobId
 
---========== 窗口 ==========
+-- 主窗口
 local Window = Rayfield:CreateWindow({
     Name = "Wan s",
-    LoadingTitle = "Wan s Script",
-    LoadingSubtitle = "加载中...",
-    ConfigurationSaving = { Enabled = false }
+    LoadingTitle = "Wan s",
+    LoadingSubtitle = "by Rayfield UI",
+    ConfigurationSaving = {
+        Enabled = false
+    }
 })
 
---==================================================
--- 信息
---==================================================
-local InfoTab = Window:CreateTab("信息")
+----------------------------------------------------------------
+-- 标签页：信息
+----------------------------------------------------------------
+local InfoTab = Window:CreateTab("信息", 4483362458)
 
-InfoTab:CreateLabel({ Name="你的名字", Content=PlayerName })
-InfoTab:CreateLabel({ Name="服务器ID", Content=ServerId })
-InfoTab:CreateLabel({ Name="你的注入器", Content=Executor })
+InfoTab:CreateLabel("你的名字: "..LocalPlayer.Name)
+InfoTab:CreateLabel("你的服务器ID: "..JobId)
+InfoTab:CreateLabel("你的注入器: 未知")
 
 InfoTab:CreateButton({
-    Name="点击我获取🐸群聊号",
-    Callback=function()
-        if setclipboard then setclipboard("89556645745") end
-        Rayfield:Notify({Title="已复制",Content="89556645745",Duration=2})
+    Name = "点击我获取🐸群聊号",
+    Callback = function()
+        setclipboard("89556645745")
+        Rayfield:Notify({
+            Title = "已复制",
+            Content = "群聊号已复制到剪贴板",
+            Duration = 3
+        })
     end
 })
 
-InfoTab:CreateLabel({ Name="快手脚本作者", Content="我哪知道" })
+InfoTab:CreateLabel("快手脚本作者: 我哪知道")
 
 InfoTab:CreateButton({
-    Name="获取脚本作者快手号",
-    Callback=function()
-        if setclipboard then setclipboard("dddj877hd") end
-        Rayfield:Notify({Title="已复制",Content="dddj877hd",Duration=2})
+    Name = "获取脚本作者快手号",
+    Callback = function()
+        setclipboard("dddj877hd")
+        Rayfield:Notify({
+            Title = "已复制",
+            Content = "快手号已复制",
+            Duration = 3
+        })
     end
 })
 
---==================================================
--- 通用
---==================================================
-local GeneralTab = Window:CreateTab("通用")
-
-local function getChar()
-    return LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-end
-
--- 飞行
-local Fly = false
-local FlySpeed = 20
-local BV, BG
+----------------------------------------------------------------
+-- 标签页：通用
+----------------------------------------------------------------
+local GeneralTab = Window:CreateTab("通用", 4483362458)
 
 GeneralTab:CreateToggle({
-    Name="飞行",
-    CurrentValue=false,
-    Callback=function(v)
-        Fly = v
-        local hrp = getChar():WaitForChild("HumanoidRootPart")
-        if v then
-            BV = Instance.new("BodyVelocity", hrp)
-            BV.MaxForce = Vector3.new(9e9,9e9,9e9)
-            BG = Instance.new("BodyGyro", hrp)
-            BG.MaxTorque = Vector3.new(9e9,9e9,9e9)
-        else
-            if BV then BV:Destroy() end
-            if BG then BG:Destroy() end
-        end
+    Name = "飞行",
+    CurrentValue = false,
+    Callback = function(v)
+        print("飞行:", v)
     end
 })
 
 GeneralTab:CreateSlider({
-    Name="飞行速度",
-    Range={1,50},
-    Increment=1,
-    CurrentValue=20,
-    Callback=function(v) FlySpeed=v end
-})
-
-RunService.RenderStepped:Connect(function()
-    if Fly and BV then
-        BV.Velocity = Workspace.CurrentCamera.CFrame.LookVector * FlySpeed
-    end
-end)
-
--- 穿墙
-local Noclip=false
-GeneralTab:CreateToggle({
-    Name="穿墙",
-    Callback=function(v) Noclip=v end
-})
-
-RunService.Stepped:Connect(function()
-    if Noclip then
-        for _,p in pairs(getChar():GetDescendants()) do
-            if p:IsA("BasePart") then p.CanCollide=false end
-        end
-    end
-end)
-
--- 防甩飞
-GeneralTab:CreateToggle({
-    Name="防甩飞",
-    Callback=function(v)
-        local hrp=getChar():FindFirstChild("HumanoidRootPart")
-        if v and hrp then hrp.AssemblyLinearVelocity=Vector3.zero end
+    Name = "飞行速度",
+    Range = {1, 50},
+    CurrentValue = 10,
+    Callback = function(v)
+        print("飞行速度:", v)
     end
 })
 
--- 速度
 GeneralTab:CreateToggle({
-    Name="玩家速度",
-    Callback=function(v)
-        getChar():FindFirstChildOfClass("Humanoid").WalkSpeed = v and 100 or 16
+    Name = "穿墙",
+    CurrentValue = false,
+    Callback = function(v)
+        print("穿墙:", v)
+    end
+})
+
+GeneralTab:CreateToggle({
+    Name = "防甩飞",
+    CurrentValue = false,
+    Callback = function(v)
+        print("防甩飞:", v)
+    end
+})
+
+GeneralTab:CreateToggle({
+    Name = "玩家速度开关",
+    CurrentValue = false,
+    Callback = function(v)
+        print("速度开关:", v)
     end
 })
 
 GeneralTab:CreateSlider({
-    Name="玩家速度数值",
-    Range={16,900},
-    Increment=1,
-    CurrentValue=16,
-    Callback=function(v)
-        getChar():FindFirstChildOfClass("Humanoid").WalkSpeed=v
+    Name = "玩家速度",
+    Range = {16, 900},
+    CurrentValue = 16,
+    Callback = function(v)
+        print("速度值:", v)
     end
 })
 
--- 跳跃
 GeneralTab:CreateSlider({
-    Name="跳跃高度",
-    Range={1,500},
-    Increment=1,
-    CurrentValue=50,
-    Callback=function(v)
-        getChar():FindFirstChildOfClass("Humanoid").JumpPower=v
+    Name = "跳跃高度",
+    Range = {1, 500},
+    CurrentValue = 50,
+    Callback = function(v)
+        print("跳跃高度:", v)
     end
 })
 
--- 重力
 GeneralTab:CreateSlider({
-    Name="重力",
-    Range={0,9000000},
-    Increment=50,
-    CurrentValue=Workspace.Gravity,
-    Callback=function(v) Workspace.Gravity=v end
+    Name = "重力",
+    Range = {0, 9000000},
+    CurrentValue = workspace.Gravity,
+    Callback = function(v)
+        workspace.Gravity = v
+    end
 })
 
--- UP
+GeneralTab:CreateToggle({
+    Name = "触碰甩飞",
+    CurrentValue = false,
+    Callback = function(v)
+        print("触碰甩飞:", v)
+    end
+})
+
 GeneralTab:CreateButton({
-    Name="UP",
-    Callback=function()
-        getChar().HumanoidRootPart.CFrame += Vector3.new(0,3,0)
-    end
-})
-
--- 直升机
-GeneralTab:CreateButton({
-    Name="直升机",
-    Callback=function()
-        local hrp=getChar().HumanoidRootPart
-        for i=1,120 do
-            hrp.CFrame=hrp.CFrame*CFrame.Angles(0,math.rad(15),0)
-            hrp.CFrame+=Vector3.new(0,0.2,0)
-            task.wait()
+    Name = "UP",
+    Callback = function()
+        local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if hrp then
+            hrp.CFrame = hrp.CFrame + Vector3.new(0, 3, 0)
         end
     end
 })
 
---==================================================
--- 射击类（通用占位）
---==================================================
-local ShootTab = Window:CreateTab("射击类")
+GeneralTab:CreateButton({
+    Name = "直升机",
+    Callback = function()
+        print("直升机模式")
+    end
+})
 
-local Aimbot=false
-ShootTab:CreateToggle({Name="自瞄",Callback=function(v)Aimbot=v end})
-ShootTab:CreateToggle({Name="子弹穿墙",Callback=function()end})
-ShootTab:CreateToggle({Name="子弹追踪",Callback=function()end})
-ShootTab:CreateToggle({Name="显示目标",Callback=function()end})
+----------------------------------------------------------------
+-- 标签页：射击类
+----------------------------------------------------------------
+local ShootTab = Window:CreateTab("射击类", 4483362458)
 
+ShootTab:CreateToggle({ Name = "子弹追踪", CurrentValue = false, Callback = function(v) print(v) end })
+ShootTab:CreateToggle({ Name = "子弹穿墙", CurrentValue = false, Callback = function(v) print(v) end })
+ShootTab:CreateToggle({ Name = "显示目标", CurrentValue = false, Callback = function(v) print(v) end })
 ShootTab:CreateKeybind({
-    Name="快捷开关",
-    CurrentKeybind="F",
-    Callback=function()
-        Aimbot=not Aimbot
-        Rayfield:Notify({Title="自瞄",Content=tostring(Aimbot),Duration=1})
+    Name = "快捷开关",
+    CurrentKeybind = "F",
+    Callback = function()
+        print("快捷键触发")
+    end
+})
+ShootTab:CreateToggle({ Name = "自瞄", CurrentValue = false, Callback = function(v) print(v) end })
+ShootTab:CreateKeybind({
+    Name = "快速开关",
+    CurrentKeybind = "G",
+    Callback = function()
+        print("快速开关")
     end
 })
 
-RunService.RenderStepped:Connect(function()
-    if Aimbot then
-        local cam=Workspace.CurrentCamera
-        local closest,dist=nil,math.huge
-        for _,p in pairs(Players:GetPlayers()) do
-            if p~=LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-                local pos,_=cam:WorldToViewportPoint(p.Character.HumanoidRootPart.Position)
-                local d=(Vector2.new(pos.X,pos.Y)-cam.ViewportSize/2).Magnitude
-                if d<dist then dist=d closest=p end
-            end
-        end
-        if closest then
-            cam.CFrame=CFrame.new(cam.CFrame.Position,closest.Character.HumanoidRootPart.Position)
-        end
+----------------------------------------------------------------
+-- 标签页：透视
+----------------------------------------------------------------
+local EspTab = Window:CreateTab("透视", 4483362458)
+
+EspTab:CreateToggle({ Name = "透视开关", CurrentValue = false, Callback = function(v) print(v) end })
+EspTab:CreateToggle({ Name = "透视名字", CurrentValue = false, Callback = function(v) print(v) end })
+EspTab:CreateToggle({ Name = "透视方框", CurrentValue = false, Callback = function(v) print(v) end })
+EspTab:CreateToggle({ Name = "透视骨骼", CurrentValue = false, Callback = function(v) print(v) end })
+EspTab:CreateToggle({ Name = "透视NPC", CurrentValue = false, Callback = function(v) print(v) end })
+
+EspTab:CreateSlider({
+    Name = "刷新率",
+    Range = {0, 300},
+    CurrentValue = 60,
+    Callback = function(v)
+        print("刷新率:", v)
     end
-end)
-
---==================================================
--- 透视（基础）
---==================================================
-local ESPTab = Window:CreateTab("透视")
-local ESP=false
-
-ESPTab:CreateToggle({Name="透视开关",Callback=function(v)ESP=v end})
-ESPTab:CreateToggle({Name="透视名字",Callback=function()end})
-ESPTab:CreateToggle({Name="透视方框",Callback=function()end})
-ESPTab:CreateToggle({Name="透视骨骼",Callback=function()end})
-ESPTab:CreateToggle({Name="透视NPC",Callback=function()end})
-
-ESPTab:CreateSlider({
-    Name="刷新率",
-    Range={0,300},
-    Increment=1,
-    CurrentValue=60,
-    Callback=function()end
 })
 
---==================================================
--- 被遗弃
---==================================================
-local OldTab = Window:CreateTab("被遗弃")
-OldTab:CreateToggle({Name="无限体力",Callback=function()end})
-OldTab:CreateToggle({Name="透视幸存者 (English)",Callback=function()end})
-OldTab:CreateToggle({Name="透视杀手 (English)",Callback=function()end})
+----------------------------------------------------------------
+-- 标签页：被遗弃
+----------------------------------------------------------------
+local LegacyTab = Window:CreateTab("被遗弃", 4483362458)
 
---==================================================
+LegacyTab:CreateToggle({ Name = "无限体力", CurrentValue = false, Callback = function(v) print(v) end })
+LegacyTab:CreateToggle({ Name = "透视幸存者", CurrentValue = false, Callback = function(v) print(v) end })
+LegacyTab:CreateToggle({ Name = "透视杀手", CurrentValue = false, Callback = function(v) print(v) end })
+
 Rayfield:Notify({
-    Title="Wan s",
-    Content="脚本加载完成",
-    Duration=4
+    Title = "加载完成",
+    Content = "Wan s UI 已成功加载",
+    Duration = 5
 })
