@@ -1,33 +1,29 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/dingding123hhh/hun/main/jmlibrary1.lua"))();
 
-local Window = Rayfield:CreateWindow({
-    Name = "UI 示例窗口",
-    LoadingTitle = "加载中...",
-    LoadingSubtitle = "UI 元素示例",
-    ConfigurationSaving = {
-        Enabled = false,
-    },
-})
+local window = library:new("脚本")
 
--- 创建标签页（使用冒号:）
-local 测试 = Window:CreateTab("测试")
+local 通用 = window:Tab("通用",'图片ID')
 
--- Rayfield中没有:section()
-测试:CreateSection("测试信息")
+local Wan =通用:section("通用",true) 
 
--- 创建文字标签
-测试:CreateLabel("欢迎使用Wan！")
+通用:Button("按钮", function()
+    
+end)
 
--- 显示玩家名
-测试:CreateLabel("用户名: " .. game.Players.LocalPlayer.Name)
+通用:Toggle("开关", "Wan", false, function(a)
+    
+end)
 
--- 显示服务器ID
-测试:CreateLabel("服务器ID: " .. game.JobId)
+通用:Slider('滑块', 'Wan', 0, 0, 9999,false, function(b)
+    
+end)
 
--- 添加一个按钮试试
-测试:CreateButton({
-    Name = "测试按钮",
-    Callback = function()
-        print("按钮被点击！")
-    end
-})
+通用:Textbox("输入", "Wan", "输入", function(c)
+  
+end)
+
+通用:Dropdown("下拉式", "Wan", {
+    "额"
+}, function(d)
+    
+end)
